@@ -9,8 +9,8 @@ def getSize(filename):
 #TODO: take pathname on command line
 #folder = os.getcwd()
 homedir = os.path.expanduser('~')
-#folder = os.path.join(homedir,'4TB/Movies/unseeded')
-folder = os.path.join(homedir,'4TB/Movies/H-WD500-MOVIES')
+folder = os.path.join(homedir,'4TB/Movies/unseeded')
+#folder = os.path.join(homedir,'4TB/Movies/H-WD500-MOVIES')
 
 #sizes = [(path, os.stat(path).st_size) for path in paths]
 
@@ -21,16 +21,19 @@ def getOneLevelSizes(folder):
   for path in paths:
     if os.path.isfile(path):
       if (('.mkv' in path) or ('.mp4' in path)) and not ('sample' in path.lower()):
-        sizes.append((path, getSize(path)))
-    else:
+        sizes.append((getSize(path), path))
+    else: #recurse
       sizes += getOneLevelSizes(path)
   return sizes
-
 sizes = getOneLevelSizes(folder)
-#    else recurse.
 
-for path,size in sizes:
+def getKey(i):
+   return i[0]
+sizesSorted = sorted(sizes, key=getKey)
+
+for size,path in sizesSorted:
    print(size,'\t',path)
+
 #folder_size = 0
 #for (path, dirs, files) in os.walk(folder):
 #  for file in files:
